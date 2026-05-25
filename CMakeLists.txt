@@ -43,6 +43,10 @@ add_library(${LIB_NAME} SHARED
   src/${PROJECT_NAME}/dynamixel_tool.cpp
   src/${PROJECT_NAME}/dynamixel_workbench.cpp
 )
+target_include_directories(${LIB_NAME} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
 target_link_libraries(${LIB_NAME}
   PUBLIC
   dynamixel_sdk::dynamixel_sdk
@@ -53,9 +57,11 @@ target_link_libraries(${LIB_NAME}
 # Install
 ################################################################################
 install(TARGETS ${LIB_NAME}
+  EXPORT export_${LIB_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin/${PROJECT_NAME}
+  INCLUDES DESTINATION include
 )
 
 install(DIRECTORY include/
@@ -63,14 +69,8 @@ install(DIRECTORY include/
 )
 
 ################################################################################
-# Test
-################################################################################
-
-################################################################################
 # Macro for ament package
 ################################################################################
-ament_export_include_directories(include)
-ament_export_dependencies(dynamixel_sdk)
-ament_export_dependencies(rclcpp)
-ament_export_libraries(${LIB_NAME})
+ament_export_targets(export_${LIB_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(dynamixel_sdk rclcpp)
 ament_package()
