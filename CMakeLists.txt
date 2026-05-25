@@ -1,11 +1,11 @@
 ################################################################################
 # Set minimum required version of cmake, project name and compile options
 ################################################################################
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.14)
 project(dynamixel_workbench_toolbox)
 
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 20)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -43,7 +43,11 @@ add_library(${LIB_NAME} SHARED
   src/${PROJECT_NAME}/dynamixel_tool.cpp
   src/${PROJECT_NAME}/dynamixel_workbench.cpp
 )
-ament_target_dependencies(${LIB_NAME} ${dependencies_lib})
+target_link_libraries(${LIB_NAME}
+  PUBLIC
+  dynamixel_sdk::dynamixel_sdk
+  rclcpp::rclcpp
+)
 
 ################################################################################
 # Install
